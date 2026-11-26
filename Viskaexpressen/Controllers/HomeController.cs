@@ -12,11 +12,6 @@ public class HomeController : Controller
     }
 
     // Tillfälliga sidor så att menyn fungerar tills funktionerna byggs.
-    public IActionResult Taglinjer()
-    {
-        return View();
-    }
-
     public IActionResult Avgangar()
     {
         return View();

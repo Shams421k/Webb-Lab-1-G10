@@ -2,9 +2,9 @@
     var aktuellController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     var aktuellAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
-    string Aktiv(string controller, string action) =>
+    string Aktiv(string controller, string? action = null) =>
         aktuellController.Equals(controller, StringComparison.OrdinalIgnoreCase)
-        && aktuellAction.Equals(action, StringComparison.OrdinalIgnoreCase)
+        && (action == null || aktuellAction.Equals(action, StringComparison.OrdinalIgnoreCase))
             ? "active"
             : "";
 }
@@ -34,10 +34,9 @@
                             <a class="nav-link @Aktiv("Home", "Index")" asp-controller="Home" asp-action="Index"
                                aria-current="@(Aktiv("Home", "Index") == "active" ? "page" : null)">Start</a>
                         </li>
-                        @* Sidorna kopplas på när funktionerna byggs. *@
                         <li class="nav-item">
-                            <a class="nav-link @Aktiv("Home", "Taglinjer")" asp-controller="Home" asp-action="Taglinjer"
-                               aria-current="@(Aktiv("Home", "Taglinjer") == "active" ? "page" : null)">Tåglinjer</a>
+                            <a class="nav-link @Aktiv("Linje")" asp-controller="Linje" asp-action="Index"
+                               aria-current="@(Aktiv("Linje") == "active" ? "page" : null)">Tåglinjer</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @Aktiv("Home", "Avgangar")" asp-controller="Home" asp-action="Avgangar"

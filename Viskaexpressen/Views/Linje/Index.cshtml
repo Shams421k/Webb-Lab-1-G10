@@ -1,0 +1,42 @@
+@model IEnumerable<Linje>
+@{
+    ViewData["Title"] = "Tåglinjer";
+}
+
+<h1>Tåglinjer</h1>
+<p class="ingress">Välj en linje för att se beskrivning, restid, pris och vilka tågsätt som kör sträckan.</p>
+
+@if (!Model.Any())
+{
+    <p>Det finns inga tåglinjer att visa.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Sträcka</th>
+                    <th>Tågtyp</th>
+                    <th>Restid</th>
+                    <th>Pris</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var linje in Model)
+                {
+                    <tr>
+                        <td>@linje.Namn</td>
+                        <td>@linje.Tagtyp</td>
+                        <td>@linje.RestidMinuter min</td>
+                        <td>@linje.Pris.ToString("0") kr</td>
+                        <td class="text-end">
+                            <a class="btn btn-vx btn-sm" asp-action="Details" asp-route-id="@linje.Id">Visa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
