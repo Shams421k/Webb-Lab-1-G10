@@ -11,7 +11,18 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Privacy()
+    // Tillfälliga sidor så att menyn fungerar tills funktionerna byggs.
+    public IActionResult Taglinjer()
+    {
+        return View();
+    }
+
+    public IActionResult Avgangar()
+    {
+        return View();
+    }
+
+    public IActionResult HittaBokning()
     {
         return View();
     }

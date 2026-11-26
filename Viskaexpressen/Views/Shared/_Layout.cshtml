@@ -1,5 +1,15 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    var aktuellController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var aktuellAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    string Aktiv(string controller, string action) =>
+        aktuellController.Equals(controller, StringComparison.OrdinalIgnoreCase)
+        && aktuellAction.Equals(action, StringComparison.OrdinalIgnoreCase)
+            ? "active"
+            : "";
+}
+<!DOCTYPE html>
+<html lang="sv">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,39 +19,61 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Viskaexpressen.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Viskaexpressen</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Viskaexpressen</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#huvudmeny"
+                        aria-controls="huvudmeny" aria-expanded="false" aria-label="Öppna menyn">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="huvudmeny">
+                    <ul class="navbar-nav ms-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link @Aktiv("Home", "Index")" asp-controller="Home" asp-action="Index"
+                               aria-current="@(Aktiv("Home", "Index") == "active" ? "page" : null)">Start</a>
+                        </li>
+                        @* Sidorna kopplas på när funktionerna byggs. *@
+                        <li class="nav-item">
+                            <a class="nav-link @Aktiv("Home", "Taglinjer")" asp-controller="Home" asp-action="Taglinjer"
+                               aria-current="@(Aktiv("Home", "Taglinjer") == "active" ? "page" : null)">Tåglinjer</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link @Aktiv("Home", "Avgangar")" asp-controller="Home" asp-action="Avgangar"
+                               aria-current="@(Aktiv("Home", "Avgangar") == "active" ? "page" : null)">Avgångar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @Aktiv("Home", "HittaBokning")" asp-controller="Home" asp-action="HittaBokning"
+                               aria-current="@(Aktiv("Home", "HittaBokning") == "active" ? "page" : null)">Hitta bokning</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    <main class="flex-grow-1">
+        <div class="container py-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="site-footer">
         <div class="container">
-            &copy; 2026 - Viskaexpressen - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row gy-3">
+                <div class="col-md-7">
+                    <p class="footer-namn">Viskaexpressen</p>
+                    <p class="mb-0">Regionaltåg från Borås C till orter i Västsverige.</p>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <p class="mb-1">Webb- och mobilutveckling, Högskolan i Borås</p>
+                    <p class="mb-0">Grupp G10 · Shams och Vincent</p>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

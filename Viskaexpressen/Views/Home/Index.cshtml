@@ -1,8 +1,43 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Start";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero">
+    <p class="hero-etikett">Regionaltåg i Västsverige</p>
+    <h1>Res med Viskaexpressen</h1>
+    <p>
+        Viskaexpressen kör från Borås C till orter som Göteborg, Varberg, Ulricehamn och Jönköping.
+        Här kan du se linjer och avgångar, välja en ledig sittplats och spara ditt bokningsnummer.
+    </p>
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <a class="btn btn-light" asp-controller="Home" asp-action="Avgangar">Till avgångar</a>
+        <a class="btn btn-outline-light" asp-controller="Home" asp-action="HittaBokning">Hitta bokning</a>
+    </div>
+</section>
+
+<section class="mt-4" aria-labelledby="sa-bokar-du">
+    <h2 id="sa-bokar-du" class="avsnitt-rubrik">Så bokar du</h2>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <article class="info-kort">
+                <p class="steg">1</p>
+                <h3>Välj avgång</h3>
+                <p>Välj ett datum och se vilka tåg som går, med restid, pris och lediga platser.</p>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="info-kort">
+                <p class="steg">2</p>
+                <h3>Välj plats</h3>
+                <p>Se vilka sittplatser som är lediga i just det tågsättet och välj en av dem.</p>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="info-kort">
+                <p class="steg">3</p>
+                <h3>Spara numret</h3>
+                <p>Efter bokningen får du ett bokningsnummer. Med det kan du hitta resan igen.</p>
+            </article>
+        </div>
+    </div>
+</section>
