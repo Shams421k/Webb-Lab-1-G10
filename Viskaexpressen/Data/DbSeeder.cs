@@ -1,9 +1,24 @@
 using Viskaexpressen.Models;
+using Viskaexpressen.Services;
 
 namespace Viskaexpressen.Data;
 
 public static class DbSeeder
 {
+    private const int AntalDagar = 7;
+
+    private static readonly string[] Fornamn =
+    {
+        "Anna", "Erik", "Maria", "Johan", "Sara", "Karl", "Emma", "Lars",
+        "Elin", "Oskar", "Fatima", "Ali", "Ida", "Mohammed", "Linnea", "Peter"
+    };
+
+    private static readonly string[] Efternamn =
+    {
+        "Andersson", "Johansson", "Karlsson", "Nilsson", "Eriksson", "Larsson",
+        "Olsson", "Persson", "Svensson", "Gustafsson", "Hassan", "Lindberg"
+    };
+
     public static void Seed(ApplicationDbContext db)
     {
         // Databasen är redan ifylld.
@@ -62,33 +77,85 @@ public static class DbSeeder
         db.Tagsatter.AddRange(litet, mellan, stort, kort);
         db.SaveChanges();
 
-        // Avgångarna räknas från den dag databasen fylls, så tidtabellen är aktuell vid redovisning.
-        var dag = DateTime.Today;
+        // Samma tidtabell varje dag, men tågsätten byter plats mellan dagarna.
+        var tidtabell = new (Linje Linje, int Timme, int Minut)[]
+        {
+            (goteborg, 6, 42),
+            (goteborg, 7, 15),
+            (varberg, 8, 20),
+            (ulricehamn, 9, 5),
+            (jonkoping, 11, 40),
+            (goteborg, 14, 25),
+            (retur, 16, 40),
+            (varberg, 17, 30),
+            (jonkoping, 19, 15)
+        };
+        var tagsatt = new[] { mellan, kort, litet, stort };
 
-        db.Avgangar.AddRange(
-            Avgang(goteborg, mellan, dag, 7, 15),
-            Avgang(goteborg, litet, dag, 9, 5),
-            Avgang(varberg, stort, dag, 11, 40),
-            Avgang(goteborg, mellan, dag, 16, 40),
-            Avgang(ulricehamn, kort, dag.AddDays(1), 8, 20),
-            Avgang(jonkoping, mellan, dag.AddDays(1), 12, 10),
-            Avgang(retur, litet, dag.AddDays(1), 18, 5),
-            Avgang(varberg, kort, dag.AddDays(2), 6, 50),
-            Avgang(goteborg, stort, dag.AddDays(2), 14, 25),
-            Avgang(ulricehamn, litet, dag.AddDays(2), 19, 15),
-            Avgang(jonkoping, stort, dag.AddDays(3), 10, 0),
-            Avgang(retur, kort, dag.AddDays(3), 17, 30));
+        // Avgångarna räknas från den dag databasen skapas, så tidtabellen är aktuell vid redovisning.
+        var idag = DateTime.Today;
+        var avgangar = new List<Avgang>();
+
+        for (var dag = 0; dag < AntalDagar; dag++)
+        {
+            for (var i = 0; i < tidtabell.Length; i++)
+            {
+                var (linje, timme, minut) = tidtabell[i];
+                var satt = tagsatt[(i + dag) % tagsatt.Length];
+
+                avgangar.Add(new Avgang
+                {
+                    LinjeId = linje.Id,
+                    TagsattId = satt.Id,
+                    Tagsatt = satt,
+                    Avgangstid = idag.AddDays(dag).AddHours(timme).AddMinutes(minut)
+                });
+            }
+        }
+
+        db.Avgangar.AddRange(avgangar);
+        db.SaveChanges();
+
+        // Fast frö så att samma platser blir upptagna varje gång databasen skapas.
+        var slump = new Random(2026);
+        var anvandaNummer = new HashSet<string>();
+
+        // En avgång i morgon med det minsta tågsättet blir helt fullbokad.
+        var fullbokad = avgangar.First(a => a.Avgangstid.Date == idag.AddDays(1) && a.Tagsatt == litet);
+
+        foreach (var avgang in avgangar)
+        {
+            var antalPlatser = avgang.Tagsatt.AntalPlatser;
+            var antalBokade = avgang == fullbokad
+                ? antalPlatser
+                : slump.Next(0, antalPlatser * 6 / 10);
+
+            var platser = Enumerable.Range(1, antalPlatser)
+                .OrderBy(_ => slump.Next())
+                .Take(antalBokade);
+
+            foreach (var plats in platser)
+            {
+                var fornamn = Fornamn[slump.Next(Fornamn.Length)];
+                var efternamn = Efternamn[slump.Next(Efternamn.Length)];
+
+                string nummer;
+                do
+                {
+                    nummer = BokningsnummerGenerator.Skapa();
+                } while (!anvandaNummer.Add(nummer));
+
+                db.Bokningar.Add(new Bokning
+                {
+                    AvgangId = avgang.Id,
+                    PlatsNummer = plats,
+                    Bokningsnummer = nummer,
+                    Namn = $"{fornamn} {efternamn}",
+                    Epost = $"{fornamn}.{efternamn}@exempel.se".ToLowerInvariant()
+                });
+            }
+        }
 
         db.SaveChanges();
-    }
-
-    private static Avgang Avgang(Linje linje, Tagsatt tagsatt, DateTime dag, int timme, int minut)
-    {
-        return new Avgang
-        {
-            LinjeId = linje.Id,
-            TagsattId = tagsatt.Id,
-            Avgangstid = dag.AddHours(timme).AddMinutes(minut)
-        };
     }
 }

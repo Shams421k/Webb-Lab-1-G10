@@ -1,0 +1,67 @@
+@model BokningFormular
+@{
+    ViewData["Title"] = "Dina uppgifter";
+    var avgang = Model.Avgang;
+    var ankomst = avgang.Avgangstid.AddMinutes(avgang.Linje.RestidMinuter);
+}
+
+<p class="mb-2">
+    <a asp-action="ValjPlats" asp-route-id="@Model.AvgangId" asp-route-plats="@Model.Plats">&larr; Byt plats</a>
+</p>
+<h1>Dina uppgifter</h1>
+<p class="ingress">Fyll i namn och e-post för att boka plats @Model.Plats.</p>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <form asp-action="Uppgifter" method="post" novalidate>
+            <div asp-validation-summary="All" class="validation-summary"></div>
+
+            <input type="hidden" asp-for="AvgangId" />
+            <input type="hidden" asp-for="Plats" />
+
+            <div class="mb-3">
+                <label asp-for="Namn" class="form-label"></label>
+                <input asp-for="Namn" class="form-control" autocomplete="name" />
+                <span asp-validation-for="Namn" class="field-validation-error"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Epost" class="form-label"></label>
+                <input asp-for="Epost" class="form-control" type="email" autocomplete="email" />
+                <span asp-validation-for="Epost" class="field-validation-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-vx">Bekräfta bokning</button>
+            <a asp-controller="Home" asp-action="Avgangar" class="ms-3">Avbryt</a>
+        </form>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="info-kort">
+            <h2 class="h5">Sammanfattning</h2>
+            <dl class="resa">
+                <dt>Datum</dt>
+                <dd>@avgang.Avgangstid.ToString("dddd d MMMM yyyy")</dd>
+                <dt>Linje</dt>
+                <dd>@avgang.Linje.Namn</dd>
+                <dt>Avgång</dt>
+                <dd>@avgang.Avgangstid.ToString("HH:mm")</dd>
+                <dt>Ankomst</dt>
+                <dd>@ankomst.ToString("HH:mm")</dd>
+                <dt>Tågsätt</dt>
+                <dd>@avgang.Tagsatt.Nummer</dd>
+                <dt>Plats</dt>
+                <dd>@Model.Plats</dd>
+                <dt>Pris</dt>
+                <dd>@avgang.Linje.Pris.ToString("0") kr</dd>
+            </dl>
+            <p class="small text-muted mb-0">
+                Platsen är inte reserverad förrän du bekräftar. Hinner någon annan före får du välja en ny.
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
