@@ -1,5 +1,10 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Viskaexpressen.Data;
+
+// Svenska datum och veckodagar, t.ex. "lördag 28 november".
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("sv-SE");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("sv-SE");
 
 var builder = WebApplication.CreateBuilder(args);
 
