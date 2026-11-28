@@ -14,8 +14,12 @@
     <div class="col-lg-5">
         <div class="info-kort">
             <h2 class="h5">Har du redan bokat?</h2>
-            <p class="text-muted">Skriv in bokningsnumret från din bekräftelse, t.ex. VX-7K3Q92.</p>
-            <a class="btn btn-vx-sekundar" asp-controller="Home" asp-action="HittaBokning">Hitta bokning</a>
+            <p class="text-muted">Skriv in bokningsnumret från din bekräftelse.</p>
+            <form asp-controller="Bokning" asp-action="Hitta" method="get" class="d-flex gap-2">
+                <input name="nummer" class="form-control" placeholder="VX-7K3Q92" maxlength="20"
+                       aria-label="Bokningsnummer" required />
+                <button type="submit" class="btn btn-vx-sekundar">Sök</button>
+            </form>
         </div>
     </div>
 </div>

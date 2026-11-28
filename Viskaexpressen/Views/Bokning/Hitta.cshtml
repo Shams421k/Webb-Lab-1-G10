@@ -1,0 +1,36 @@
+@model Bokning?
+@{
+    ViewData["Title"] = "Hitta bokning";
+}
+
+<h1>Hitta bokning</h1>
+<p class="ingress">Skriv in bokningsnumret från din bekräftelse.</p>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <form asp-action="Hitta" method="get" class="info-kort">
+            <label for="nummer" class="form-label">Bokningsnummer</label>
+            <input id="nummer" name="nummer" class="form-control mb-3" value="@ViewData["Nummer"]"
+                   placeholder="VX-7K3Q92" maxlength="20" autocomplete="off" required />
+            <button type="submit" class="btn btn-vx-sekundar w-100">Visa bokning</button>
+        </form>
+    </div>
+
+    <div class="col-lg-7">
+        @if (ViewData["Fel"] is string fel)
+        {
+            <div class="felruta" role="alert">@fel</div>
+        }
+
+        @if (Model != null)
+        {
+            <div class="info-kort">
+                <div class="bokningsnummer">
+                    <span>Bokningsnummer</span>
+                    <strong>@Model.Bokningsnummer</strong>
+                </div>
+                <partial name="_BokningDetaljer" model="Model" />
+            </div>
+        }
+    </div>
+</div>
