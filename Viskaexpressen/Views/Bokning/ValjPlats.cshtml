@@ -1,0 +1,106 @@
+@model ValjPlatsViewModel
+@{
+    ViewData["Title"] = "Välj plats";
+    var avgang = Model.Avgang;
+    var antal = avgang.Tagsatt.AntalPlatser;
+    const int PlatserPerVagn = 64;
+}
+
+<p class="mb-2"><a asp-controller="Home" asp-action="Avgangar">&larr; Tillbaka till avgångar</a></p>
+<h1>Välj plats</h1>
+<p class="ingress">
+    @avgang.Avgangstid.ToString("HH:mm") @avgang.Linje.Namn ·
+    @avgang.Avgangstid.ToString("dddd d MMMM") ·
+    Tågsätt @avgang.Tagsatt.Nummer (@antal platser)
+</p>
+
+@if (TempData["Fel"] is string fel)
+{
+    <div class="felruta" role="alert">@fel</div>
+}
+
+@if (Model.LedigaPlatser == 0)
+{
+    <div class="felruta">Avgången är fullbokad. Välj en annan avgång.</div>
+}
+
+<form asp-action="Uppgifter" method="get">
+    <input type="hidden" name="avgangId" value="@avgang.Id" />
+
+    <div class="row g-4">
+        <div class="col-lg-9">
+            @for (var start = 1; start <= antal; start += PlatserPerVagn)
+            {
+                var slut = Math.Min(start + PlatserPerVagn - 1, antal);
+                var kolumner = (slut - start) / 4 + 1;
+
+                <div class="vagn">
+                    <p class="vagn-namn">Vagn @((start - 1) / PlatserPerVagn + 1)</p>
+                    <div class="vagn-platser">
+                        @* Två rader på varje sida om gången, platserna numreras kolumn för kolumn. *@
+                        @foreach (var rad in new[] { 0, 1, -1, 2, 3 })
+                        {
+                            if (rad == -1)
+                            {
+                                <div class="gang">gång</div>
+                                continue;
+                            }
+
+                            <div class="vagn-rad">
+                                @for (var k = 0; k < kolumner; k++)
+                                {
+                                    var nr = start + k * 4 + rad;
+                                    if (nr > slut)
+                                    {
+                                        continue;
+                                    }
+
+                                    var upptagen = Model.UpptagnaPlatser.Contains(nr);
+                                    <input type="radio" class="plats-val" name="plats" id="plats-@nr" value="@nr"
+                                           disabled="@upptagen" checked="@(Model.ValdPlats == nr && !upptagen)" required />
+                                    <label for="plats-@nr" class="plats @(upptagen ? "upptagen" : "")"
+                                           title="@(upptagen ? $"Plats {nr} är upptagen" : $"Plats {nr}")">@nr</label>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="platsforklaring">
+                <span><span class="plats exempel"></span> Ledig</span>
+                <span><span class="plats upptagen exempel"></span> Upptagen</span>
+                <span><span class="plats vald exempel"></span> Din plats</span>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="info-kort">
+                <h2 class="h5">Din resa</h2>
+                <dl class="resa">
+                    <dt>Avgång</dt>
+                    <dd>@avgang.Avgangstid.ToString("HH:mm")</dd>
+                    <dt>Linje</dt>
+                    <dd>@avgang.Linje.Namn</dd>
+                    <dt>Plats</dt>
+                    <dd id="vald-plats">@(Model.ValdPlats?.ToString() ?? "–")</dd>
+                    <dt>Pris</dt>
+                    <dd>@avgang.Linje.Pris.ToString("0") kr</dd>
+                </dl>
+                <p class="small text-muted">Lediga platser: @Model.LedigaPlatser av @antal</p>
+                <button type="submit" class="btn btn-vx w-100" disabled="@(Model.LedigaPlatser == 0)">Fortsätt &rarr;</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // Visar vald plats i rutan direkt. Utan JavaScript fungerar formuläret ändå.
+        document.querySelectorAll('.plats-val').forEach(function (val) {
+            val.addEventListener('change', function () {
+                document.getElementById('vald-plats').textContent = val.value;
+            });
+        });
+    </script>
+}
