@@ -1,0 +1,21 @@
+@model Bokning
+@{
+    var avgang = Model.Avgang;
+}
+
+<dl class="resa">
+    <dt>Resenär</dt>
+    <dd>@Model.Namn</dd>
+    <dt>E-post</dt>
+    <dd>@Model.Epost</dd>
+    <dt>Linje</dt>
+    <dd>@avgang.Linje.Namn (@avgang.Linje.Tagtyp)</dd>
+    <dt>Avgång</dt>
+    <dd>@avgang.Avgangstid.ToString("dddd d MMMM yyyy 'kl.' HH:mm")</dd>
+    <dt>Ankomst</dt>
+    <dd>@avgang.Avgangstid.AddMinutes(avgang.Linje.RestidMinuter).ToString("HH:mm")</dd>
+    <dt>Tågsätt / plats</dt>
+    <dd>@avgang.Tagsatt.Nummer, plats @Model.PlatsNummer</dd>
+    <dt>Pris</dt>
+    <dd>@avgang.Linje.Pris.ToString("0") kr</dd>
+</dl>
