@@ -1,9 +1,9 @@
 :root {
-  --petrol: #154a5c;
-  --petrol-mork: #0f3946;
-  --orange: #e4661c;
-  --orange-mork: #c9540f;
-  --sand: #f4f1ea;
+  --petrol: #1d4654;
+  --petrol-mork: #14333e;
+  --orange: #de6b26;
+  --orange-mork: #c25715;
+  --sand: #f5f3ee;
   --kant: #e2ddd2;
   --text: #1f2b30;
   --gra: #6d767a;
@@ -38,32 +38,25 @@ a:hover {
 
 .navbar {
   background: var(--petrol);
-  padding: 0;
+  border-bottom: 4px solid var(--orange);
+  padding: .6rem 0;
 }
 
 .navbar-brand {
-  align-items: center;
-  display: flex;
+  font-size: 1.3rem;
   font-weight: 700;
-  gap: .5rem;
-  padding: .8rem 0;
+  letter-spacing: -.01em;
 }
 
-.logga {
-  background: var(--orange);
-  border-radius: 4px;
-  color: #fff;
-  display: inline-block;
-  font-size: .95rem;
-  line-height: 1.6rem;
-  text-align: center;
-  width: 1.6rem;
+.navbar-brand span {
+  color: #f3a674;
+  font-weight: 400;
 }
 
 .navbar .nav-link {
-  border-bottom: 3px solid transparent;
+  border-radius: 6px;
   color: rgba(255, 255, 255, .75);
-  padding: 1.1rem .9rem calc(1.1rem - 3px) !important;
+  padding: .4rem .8rem !important;
 }
 
 .navbar .nav-link:hover {
@@ -71,9 +64,8 @@ a:hover {
 }
 
 .navbar .nav-link.active {
-  border-bottom-color: var(--orange);
+  background: rgba(255, 255, 255, .12);
   color: #fff;
-  font-weight: 600;
 }
 
 /* Text */
@@ -92,9 +84,9 @@ a:hover {
 
 .btn-vx,
 .btn-vx-sekundar {
-  border-radius: 999px;
+  border-radius: 6px;
   font-weight: 600;
-  padding: .45rem 1.3rem;
+  padding: .45rem 1.1rem;
 }
 
 .btn-vx {
@@ -136,23 +128,24 @@ a:hover {
 .info-kort {
   background: #fff;
   border: 1px solid var(--kant);
-  border-radius: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
   padding: 1.25rem 1.5rem;
 }
 
 .etikett {
-  border: 1px solid var(--petrol);
-  border-radius: 999px;
+  background: #e3edf0;
+  border-radius: 4px;
   color: var(--petrol);
   display: inline-block;
   font-size: .75rem;
   font-weight: 600;
-  padding: .05rem .55rem;
+  padding: .1rem .45rem;
 }
 
 .etikett-express {
-  border-color: var(--orange);
-  color: var(--orange);
+  background: #fbe7da;
+  color: var(--orange-mork);
 }
 
 .ledigt {
@@ -165,29 +158,31 @@ a:hover {
   font-weight: 600;
 }
 
-/* Datumväljare som rad med knappar */
+/* Datumväljare som flikar */
 
 .datumrad {
+  border-bottom: 1px solid var(--kant);
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
   margin-bottom: 1.25rem;
 }
 
 .datumrad a {
-  background: #fff;
-  border: 1px solid var(--kant);
-  border-radius: 999px;
-  color: var(--text);
+  border-bottom: 3px solid transparent;
+  color: var(--gra);
   font-size: .9rem;
-  padding: .3rem .9rem;
+  margin-bottom: -1px;
+  padding: .5rem 1rem;
   text-decoration: none;
 }
 
+.datumrad a:hover {
+  color: var(--text);
+}
+
 .datumrad a.vald {
-  background: var(--petrol);
-  border-color: var(--petrol);
-  color: #fff;
+  border-bottom-color: var(--orange);
+  color: var(--text);
   font-weight: 600;
 }
 
