@@ -39,8 +39,8 @@
                                aria-current="@(Aktiv("Linje") == "active" ? "page" : null)">Tåglinjer</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @Aktiv("Home", "Avgangar")" asp-controller="Home" asp-action="Avgangar"
-                               aria-current="@(Aktiv("Home", "Avgangar") == "active" ? "page" : null)">Avgångar</a>
+                            <a class="nav-link @Aktiv("Avgang")" asp-controller="Avgang" asp-action="Index"
+                               aria-current="@(Aktiv("Avgang") == "active" ? "page" : null)">Avgångar</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @Aktiv("Bokning", "Hitta")" asp-controller="Bokning" asp-action="Hitta"

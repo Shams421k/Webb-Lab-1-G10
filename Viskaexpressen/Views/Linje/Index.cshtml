@@ -28,7 +28,9 @@ else
                 {
                     <tr>
                         <td>@linje.Namn</td>
-                        <td>@linje.Tagtyp</td>
+                        <td>
+                            <span class="etikett @(linje.Tagtyp == "Express" ? "etikett-express" : null)">@linje.Tagtyp</span>
+                        </td>
                         <td>@linje.RestidMinuter min</td>
                         <td>@linje.Pris.ToString("0") kr</td>
                         <td class="text-end">

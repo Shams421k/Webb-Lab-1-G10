@@ -6,7 +6,11 @@
     const int PlatserPerVagn = 64;
 }
 
-<p class="mb-2"><a asp-controller="Home" asp-action="Avgangar">&larr; Tillbaka till avgångar</a></p>
+<p class="mb-2">
+    <a asp-controller="Avgang" asp-action="Index"
+       asp-route-datum="@avgang.Avgangstid.ToString("yyyy-MM-dd")"
+       asp-route-linjeId="@avgang.LinjeId">&larr; Tillbaka till avgångar</a>
+</p>
 <h1>Välj plats</h1>
 <p class="ingress">
     @avgang.Avgangstid.ToString("HH:mm") @avgang.Linje.Namn ·

@@ -13,7 +13,7 @@
 </p>
 
 <article class="info-kort mb-4">
-    <p class="text-muted mb-1">@Model.Tagtyp</p>
+    <p class="mb-2"><span class="etikett @(Model.Tagtyp == "Express" ? "etikett-express" : null)">@Model.Tagtyp</span></p>
     <h1>@Model.Namn</h1>
     <p>@Model.Beskrivning</p>
     <div class="row g-3">
@@ -34,6 +34,7 @@
             <p class="mb-0">@Model.Pris.ToString("0") kr</p>
         </div>
     </div>
+    <a class="btn btn-vx mt-3" asp-controller="Avgang" asp-action="Index" asp-route-linjeId="@Model.Id">Visa avgångar</a>
 </article>
 
 <section aria-labelledby="tagsatt-rubrik">

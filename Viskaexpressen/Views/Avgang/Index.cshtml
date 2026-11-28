@@ -1,0 +1,94 @@
+@model AvgangIndexViewModel
+@{
+    ViewData["Title"] = "Avgångar";
+    var datumText = Model.ValtDatum.ToString("dddd d MMMM");
+}
+
+<h1>Avgångar</h1>
+@if (Model.LinjeNamn == null)
+{
+    <p class="ingress">Välj en dag och en avgång med lediga platser.</p>
+}
+else
+{
+    <p class="ingress">
+        Avgångar för @Model.LinjeNamn.
+        <a asp-action="Index" asp-route-datum="@Model.ValtDatum.ToString("yyyy-MM-dd")">Visa alla linjer</a>
+    </p>
+}
+
+@if (Model.Dagar.Count > 0)
+{
+    <nav class="datumrad" aria-label="Välj datum">
+        @foreach (var dag in Model.Dagar)
+        {
+            <a class="@(dag == Model.ValtDatum ? "vald" : null)"
+               asp-action="Index"
+               asp-route-datum="@dag.ToString("yyyy-MM-dd")"
+               asp-route-linjeId="@Model.LinjeId">
+                @dag.ToString("ddd d MMM")
+            </a>
+        }
+    </nav>
+}
+
+@if (Model.Avgangar.Count == 0)
+{
+    <div class="info-kort">
+        @if (Model.LinjeNamn == null)
+        {
+            <p class="mb-0">Det finns inga avgångar @datumText.</p>
+        }
+        else
+        {
+            <p class="mb-0">Det finns inga avgångar för @Model.LinjeNamn @datumText.</p>
+        }
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Avgång</th>
+                    <th>Sträcka</th>
+                    <th>Tågtyp</th>
+                    <th>Tågsätt</th>
+                    <th>Restid</th>
+                    <th>Pris</th>
+                    <th>Lediga platser</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var avgang in Model.Avgangar)
+                {
+                    <tr>
+                        <td>@avgang.Avgangstid.ToString("HH:mm")</td>
+                        <td>@avgang.LinjeNamn</td>
+                        <td>
+                            <span class="etikett @(avgang.Tagtyp == "Express" ? "etikett-express" : null)">@avgang.Tagtyp</span>
+                        </td>
+                        <td>@avgang.TagsattNummer</td>
+                        <td>@avgang.RestidMinuter min</td>
+                        <td>@avgang.Pris.ToString("0") kr</td>
+                        <td class="@(avgang.Fullbokad ? "fullbokad" : "ledigt")">
+                            @(avgang.Fullbokad ? "Fullbokad" : $"{avgang.LedigaPlatser} lediga")
+                        </td>
+                        <td class="text-end">
+                            @if (avgang.Fullbokad)
+                            {
+                                <span class="btn btn-vx btn-sm disabled" aria-disabled="true">Välj</span>
+                            }
+                            else
+                            {
+                                <a class="btn btn-vx btn-sm" asp-controller="Bokning" asp-action="ValjPlats" asp-route-id="@avgang.Id">Välj</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

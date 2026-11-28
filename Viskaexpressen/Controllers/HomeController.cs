@@ -11,12 +11,6 @@ public class HomeController : Controller
         return View();
     }
 
-    // Tillfälliga sidor så att menyn fungerar tills funktionerna byggs.
-    public IActionResult Avgangar()
-    {
-        return View();
-    }
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

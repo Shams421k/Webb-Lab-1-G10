@@ -32,7 +32,9 @@
             </div>
 
             <button type="submit" class="btn btn-vx">Bekräfta bokning</button>
-            <a asp-controller="Home" asp-action="Avgangar" class="ms-3">Avbryt</a>
+            <a asp-controller="Avgang" asp-action="Index"
+               asp-route-datum="@avgang.Avgangstid.ToString("yyyy-MM-dd")"
+               asp-route-linjeId="@avgang.LinjeId" class="ms-3">Avbryt</a>
         </form>
     </div>
 
